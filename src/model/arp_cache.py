@@ -1,7 +1,7 @@
 from .network_device import NetworkDevice
 from .arp_event import ARPEvent
 import scapy.all as scapy
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import defaultdict
 
 scapy.conf.iface = "eth0"
@@ -15,6 +15,7 @@ class ARPCache:
         self.events = []
         self.devices = {}
         self.spoof_count = defaultdict(int)
+        self.last_spoof_time = datetime.min
         self.build_baseline()
 
     def build_baseline(self):
@@ -26,7 +27,6 @@ class ARPCache:
             self.baseline_cache[received.psrc] = received.hwsrc
             self.mac_ip_cache[received.hwsrc] = received.psrc
             self.devices[received.hwsrc] = NetworkDevice(received.psrc, received.hwsrc)
-        # Force Detector's own mapping
         self.baseline_cache[detector_ip] = detector_mac
         self.mac_ip_cache[detector_mac] = detector_ip
         self.devices[detector_mac] = NetworkDevice(detector_ip, detector_mac)
@@ -57,14 +57,16 @@ class ARPCache:
         return None
 
     def update(self, ip, mac):
+        now = datetime.now()
         if ip in self.baseline_cache:
             real_mac = self.baseline_cache[ip]
             if real_mac != mac:
                 self.spoof_count[(ip, mac)] += 1
+                self.last_spoof_time = now
                 if self.spoof_count[(ip, mac)] >= 3:
                     attacker_ip = self.get_ip(mac)
                     if attacker_ip and attacker_ip != ip:
-                        event = ARPEvent(ip, real_mac, mac, attacker_ip, datetime.now())
+                        event = ARPEvent(ip, real_mac, mac, attacker_ip, now)
                         self.events.append(event)
                         self.devices[real_mac].attacked = True
                         if mac in self.devices:
@@ -76,8 +78,12 @@ class ARPCache:
                         return event
             else:
                 self.spoof_count[(ip, mac)] = 0
+                # Reset all states if no spoofing for 3 seconds
+                if now - self.last_spoof_time > timedelta(seconds=5.2):
+                    for dev in self.devices.values():
+                        dev.attacked = False
+                        dev.is_attacker = False
         else:
-            # New device
             self.baseline_cache[ip] = mac
             self.mac_ip_cache[mac] = ip
             self.devices[mac] = NetworkDevice(ip, mac)

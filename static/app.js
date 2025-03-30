@@ -16,29 +16,36 @@ function stopMonitoring() {
 function drawTopology(devices) {
     topologyCtx.clearRect(0, 0, topologyCanvas.width, topologyCanvas.height);
     const nodeRadius = 20;
-    const spacing = 150;
-    let x = 50;
+    const centerX = topologyCanvas.width / 2;
+    const centerY = topologyCanvas.height / 2;
+    const radius = Math.min(topologyCanvas.width, topologyCanvas.height) / 3;
+    const angleStep = (2 * Math.PI) / devices.length;
 
     devices.forEach((device, index) => {
-        const y = topologyCanvas.height / 2;
+        const x = centerX + radius * Math.cos(angleStep * index);
+        const y = centerY + radius * Math.sin(angleStep * index);
+
         topologyCtx.beginPath();
-        topologyCtx.arc(x + index * spacing, y, nodeRadius, 0, Math.PI * 2);
+        topologyCtx.arc(x, y, nodeRadius, 0, Math.PI * 2);
 
         if (device.is_attacker) {
-            topologyCtx.fillStyle = 'red';  // Attacker
-            topologyCtx.fill();  // Flash effect could be added with setInterval
+            topologyCtx.fillStyle = 'red';
+            topologyCtx.fill();
         } else if (device.attacked) {
-            topologyCtx.fillStyle = 'orange';  // Attacked
+            topologyCtx.fillStyle = 'orange';
             topologyCtx.fill();
         } else {
-            topologyCtx.fillStyle = 'blue';  // Normal
+            topologyCtx.fillStyle = 'blue';
             topologyCtx.fill();
         }
 
         topologyCtx.stroke();
+
         topologyCtx.fillStyle = 'black';
         topologyCtx.font = '12px Arial';
-        topologyCtx.fillText(`${device.ip} (${device.mac})`, x + index * spacing - 40, y + nodeRadius + 20);
+        topologyCtx.textAlign = 'center';
+        const text = `${device.ip} (${device.mac})`;
+        topologyCtx.fillText(text, x, y + nodeRadius + 15);
     });
 }
 
@@ -47,12 +54,11 @@ function updateUI() {
         .then(response => response.json())
         .then(devices => {
             drawTopology(devices);
-            const attacked = devices.filter(d => d.attacked || d.is_attacker).length > 0;
-            alertDiv.textContent = attacked ? "Attack Detected!" : "";
+            const attacked = devices.some(d => d.attacked || d.is_attacker);
+            alertDiv.textContent = attacked ? "Attack Detected!" : "Network Safe";
         })
         .catch(err => console.error("Error fetching devices:", err));
 }
 
-// Poll every 2 seconds
-setInterval(updateUI, 2000);
-updateUI();  // Initial draw
+setInterval(updateUI, 1000);  // Faster polling for real-time feel
+updateUI();
