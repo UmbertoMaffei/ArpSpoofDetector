@@ -27,7 +27,7 @@ function drawTopology(devices) {
 
         topologyCtx.beginPath();
         topologyCtx.arc(x, y, nodeRadius, 0, Math.PI * 2);
-
+        
         if (device.is_attacker) {
             topologyCtx.fillStyle = 'red';
             topologyCtx.fill();
@@ -38,7 +38,7 @@ function drawTopology(devices) {
             topologyCtx.fillStyle = 'blue';
             topologyCtx.fill();
         }
-
+        
         topologyCtx.stroke();
 
         topologyCtx.fillStyle = 'black';
@@ -60,5 +60,5 @@ function updateUI() {
         .catch(err => console.error("Error fetching devices:", err));
 }
 
-setInterval(updateUI, 1000);  // Faster polling for real-time feel
+setInterval(updateUI, 1000);
 updateUI();

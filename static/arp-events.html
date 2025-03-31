@@ -7,10 +7,10 @@
     <meta name="description" content="">
     <title>ARP GUARDIAN</title>
     <link rel="stylesheet" href="/static/nicepage.css" media="screen">
-    <link rel="stylesheet" href="/static/dashboard.css" media="screen">
+    <link rel="stylesheet" href="/static/arp-events.css" media="screen">
     <script class="u-script" type="text/javascript" src="/static/jquery.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="/static/nicepage.js" defer=""></script>
-    <script type="text/javascript" src="/static/app.js" defer=""></script>
+    <script type="text/javascript" src="/static/events.js" defer=""></script>
     <link rel="icon" href="/static/images/seclogo.svg">
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
     <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i|Roboto+Condensed:300,300i,400,400i,700,700i">
@@ -21,9 +21,9 @@
         "logo": "/static/images/seclogo.svg"
     }</script>
     <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="dashboard">
+    <meta property="og:title" content="ARP GUARDIAN">
     <meta property="og:description" content="">
-    <meta property="og:type" content="ARP GUARDIAN">
+    <meta property="og:type" content="website">
 </head>
 <body data-path-to-root="./" class="u-body u-overlap u-overlap-contrast u-overlap-transparent u-xl-mode" data-lang="it">
     <header class="u-clearfix u-header u-header" id="sec-e1b3">
@@ -64,10 +64,19 @@
     </header>
     <section class="u-clearfix u-container-align-center u-image u-shading u-section-1" id="sec-4eed" data-image-width="1920" data-image-height="1080">
         <div class="u-clearfix u-sheet u-sheet-1">
-            <button onclick="startMonitoring()">Start Monitoring</button>
-            <button onclick="stopMonitoring()">Stop Monitoring</button>
-            <div id="alert"></div>
-            <canvas id="topologyCanvas" width="800" height="400"></canvas>
+            <h2>ARP Events</h2>
+            <table id="eventsTable">
+                <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>Old MAC</th>
+                        <th>New MAC</th>
+                        <th>Attacker IP</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="eventsBody"></tbody>
+            </table>
         </div>
     </section>
 </body>
