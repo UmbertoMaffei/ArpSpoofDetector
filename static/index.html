@@ -17,7 +17,7 @@
     <script type="application/ld+json">{
         "@context": "http://schema.org",
         "@type": "Organization",
-        "name": "ARP GUARDIAN SITE",
+        "name": "Site2",
         "logo": "/static/images/seclogo.svg"
     }</script>
     <meta name="theme-color" content="#478ac9">
@@ -62,12 +62,15 @@
             <h6 class="u-align-left u-custom-font u-font-roboto-condensed u-text u-text-custom-color-2 u-text-1">ARP GUARDIAN</h6>
         </div>
     </header>
-    <section class="u-clearfix u-container-align-center u-image u-shading u-section-1" id="sec-4eed" data-image-width="1920" data-image-height="1080">
+    <section class="u-clearfix u-container-align-center u-image u-shading u-section-1" id="sec-4eed" data-image-width="1920" data-image-height="1080" style="padding-top: 100px;">
         <div class="u-clearfix u-sheet u-sheet-1">
-            <button onclick="startMonitoring()">Start Monitoring</button>
-            <button onclick="stopMonitoring()">Stop Monitoring</button>
-            <div id="alert"></div>
+            <div id="alert" style="font-size: 20px;"></div>
             <canvas id="topologyCanvas" width="800" height="400"></canvas>
+            <div class="button-container">
+                <button class="monitor-btn" onclick="startMonitoring()">Start Monitoring</button>
+                <button class="monitor-btn" onclick="stopMonitoring()">Stop Monitoring</button>
+                <div id="notification" class="notification"></div>
+            </div>
         </div>
     </section>
 </body>

@@ -1,6 +1,8 @@
 .u-section-1 {
-    background-image: linear-gradient(0deg, rgba(26,26,26,0.55), rgba(26,26,26,0.55)), url("images/Homepage-HD-slide-banner-11-1.jpg");
+    background-image: linear-gradient(0deg, rgba(26,26,26,0.55), rgba(26,26,26,0.55)), url("/static/images/Homepage-HD-slide-banner-11-1.jpg");
     background-position: 50% 50%;
+    background-size: cover;
+    min-height: 100vh;
 }
 
 .u-section-1 .u-sheet-1 {
@@ -31,15 +33,17 @@
     }
 }
 
-/* Added styles for events table */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
+    margin: 0;
+    height: 100vh;
 }
 
 h2 {
-    color: #fff;
-    margin: 20px 0;
+    color: #d741b9;
+    margin: 80px 0 20px; /* Lower than header */
+    font-size: 15px; /* Smaller */
 }
 
 #eventsTable {
@@ -47,6 +51,7 @@ h2 {
     margin: 0 auto;
     border-collapse: collapse;
     background: rgba(255, 255, 255, 0.9);
+    margin-top: 20px; /* Adjusted from 100px */
 }
 
 #eventsTable th, #eventsTable td {
@@ -55,7 +60,7 @@ h2 {
 }
 
 #eventsTable th {
-    background: #333;
+    background: #4b0082; /* Dark purple */
     color: #fff;
 }
 
