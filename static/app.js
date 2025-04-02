@@ -5,9 +5,9 @@ const alertDiv = document.getElementById('alert');
 const notificationDiv = document.getElementById('notification');
 
 const normalHostImage = new Image();
-normalHostImage.src = '/static/images/normal-host.svg';
+normalHostImage.src = '/static/images/normal.svg';
 const attackedHostImage = new Image();
-attackedHostImage.src = '/static/images/attacked-host.svg';
+attackedHostImage.src = '/static/images/attacked.svg';
 const attackerHostImage = new Image();
 attackerHostImage.src = '/static/images/attacker-host.svg';
 
