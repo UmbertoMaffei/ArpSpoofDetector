@@ -12740,7 +12740,7 @@ section.u-image:not(.u-hover-box),
   position: fixed;
 }
 .u-overlap.u-overlap-transparent .u-header {
-  background-color: transparent !important;
+  background-color: #0000004a !important;
   background-image: none !important;
 }
 .u-overlap.u-offcanvas-opened .u-header.u-sticky {

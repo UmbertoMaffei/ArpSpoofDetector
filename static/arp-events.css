@@ -1,3 +1,12 @@
+header.u-header {
+    background: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+
 .u-section-1 {
     background-image: linear-gradient(0deg, rgba(26,26,26,0.55), rgba(26,26,26,0.55)), url("/static/images/Homepage-HD-slide-banner-11-1.jpg");
     background-position: 50% 50%;
@@ -7,6 +16,7 @@
 
 .u-section-1 .u-sheet-1 {
     min-height: 715px;
+    padding-top: 50px;
 }
 
 @media (max-width: 1199px) {

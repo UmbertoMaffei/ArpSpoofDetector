@@ -5,9 +5,9 @@ const alertDiv = document.getElementById('alert');
 const notificationDiv = document.getElementById('notification');
 
 const normalHostImage = new Image();
-normalHostImage.src = '/static/images/attacked-host.svg';
+normalHostImage.src = '/static/images/normal-host.svg';
 const attackedHostImage = new Image();
-attackedHostImage.src = '/static/images/normal-host.svg';
+attackedHostImage.src = '/static/images/attacked-host.svg';
 const attackerHostImage = new Image();
 attackerHostImage.src = '/static/images/attacker-host.svg';
 
@@ -35,10 +35,10 @@ function stopMonitoring() {
 
 function drawTopology(devices) {
     topologyCtx.clearRect(0, 0, topologyCanvas.width, topologyCanvas.height);
-    const nodeSize = 40; // Adjust based on your image size
+    const nodeSize = 40;
     const centerX = topologyCanvas.width / 2;
     const centerY = topologyCanvas.height / 2;
-    const radius = Math.min(topologyCanvas.width, topologyCanvas.height) / 2.5; // Increased for spacing
+    const radius = Math.min(topologyCanvas.width, topologyCanvas.height) / 2.5;
     const angleStep = (2 * Math.PI) / devices.length;
 
     devices.forEach((device, index) => {

@@ -13,6 +13,10 @@ def serve_frontend():
 def serve_events():
     return send_from_directory(app.static_folder, 'arp-events.html')
 
+@app.route('/about')
+def serve_about():
+    return send_from_directory(app.static_folder, 'about.html')
+
 @app.route('/api/devices', methods=['GET'])
 def get_devices():
     devices = [d.to_dict() for d in detector.cache.get_devices()]

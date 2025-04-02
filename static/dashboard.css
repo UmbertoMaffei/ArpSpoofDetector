@@ -3,33 +3,36 @@
     background-position: 50% 50%;
     background-size: cover;
     min-height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 .u-section-1 .u-sheet-1 {
-    min-height: 715px;
+    min-height: 100vh;
+    padding-top: 50px;
 }
 
 @media (max-width: 1199px) {
     .u-section-1 .u-sheet-1 {
-        min-height: 330px;
+        min-height: 80vh;
     }
 }
 
 @media (max-width: 991px) {
     .u-section-1 .u-sheet-1 {
-        min-height: 253px;
+        min-height: 60vh;
     }
 }
 
 @media (max-width: 767px) {
     .u-section-1 .u-sheet-1 {
-        min-height: 175px;
+        min-height: 40vh;
     }
 }
 
 @media (max-width: 575px) {
     .u-section-1 .u-sheet-1 {
-        min-height: 75px;
+        min-height: 20vh;
     }
 }
 
@@ -40,6 +43,14 @@ body {
     height: 100vh;
 }
 
+header.u-header {
+    background: rgba(0, 0, 0, 0.7) !important; /* Darker, transparent */
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
 canvas {
     border: 1px solid #ccc;
     margin-top: 20px;
@@ -47,7 +58,7 @@ canvas {
 }
 
 .button-container {
-    margin-top: 100px; /* Moves buttons below header */
+    margin-top: 20px;
     position: relative;
     z-index: 1;
 }
@@ -65,7 +76,7 @@ canvas {
 }
 
 .monitor-btn:hover {
-    background-color: #b3369a; /* Darker shade */
+    background-color: #b3369a;
 }
 
 .notification {
@@ -84,6 +95,7 @@ canvas {
     color: #d741b9;
     margin: 10px;
     font-weight: bold;
+    font-size: 20px;
 }
 
 #alert.alert-active {
