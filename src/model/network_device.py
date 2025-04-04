@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class NetworkDevice:
     def __init__(self, ip, mac):
         self.ip = ip
@@ -10,5 +13,6 @@ class NetworkDevice:
             'ip': self.ip,
             'mac': self.mac,
             'attacked': self.attacked,
-            'is_attacker': self.is_attacker
+            'is_attacker': self.is_attacker,
         }
+

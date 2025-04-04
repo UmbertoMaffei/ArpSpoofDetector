@@ -28,6 +28,7 @@ class ARPSpooferDetector:
     def stop_sniffing(self):
         if self.running:
             self.running = False
+            self.cache.stop_scan()  # Stop periodic scan
             if self.thread:
                 self.thread.join(timeout=2)
                 if self.thread.is_alive():

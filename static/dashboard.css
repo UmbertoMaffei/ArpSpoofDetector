@@ -9,32 +9,16 @@
 
 .u-section-1 .u-sheet-1 {
     min-height: 100vh;
-    padding-top: 50px;
+    padding-top: 80px; /* Space for header */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-@media (max-width: 1199px) {
-    .u-section-1 .u-sheet-1 {
-        min-height: 80vh;
-    }
-}
-
-@media (max-width: 991px) {
-    .u-section-1 .u-sheet-1 {
-        min-height: 60vh;
-    }
-}
-
-@media (max-width: 767px) {
-    .u-section-1 .u-sheet-1 {
-        min-height: 40vh;
-    }
-}
-
-@media (max-width: 575px) {
-    .u-section-1 .u-sheet-1 {
-        min-height: 20vh;
-    }
-}
+@media (max-width: 1199px) { .u-section-1 .u-sheet-1 { min-height: 80vh; } }
+@media (max-width: 991px) { .u-section-1 .u-sheet-1 { min-height: 60vh; } }
+@media (max-width: 767px) { .u-section-1 .u-sheet-1 { min-height: 40vh; } }
+@media (max-width: 575px) { .u-section-1 .u-sheet-1 { min-height: 20vh; } }
 
 body {
     font-family: Arial, sans-serif;
@@ -44,7 +28,7 @@ body {
 }
 
 header.u-header {
-    background: rgba(0, 0, 0, 0.7) !important; /* Darker, transparent */
+    background: rgba(0, 0, 0, 0.7) !important;
     position: fixed;
     top: 0;
     width: 100%;
@@ -52,13 +36,16 @@ header.u-header {
 }
 
 canvas {
-    border: 1px solid #ccc;
-    margin-top: 20px;
-    background: rgba(255, 255, 255, 0.7);
+    width: 100%;
+    height: calc(100vh - 260px); /* Adjusted for 80px alert margin + buttons */
+    background: transparent; /* Fully transparent */
+    margin: 20px 0;
+    flex-grow: 1;
 }
 
 .button-container {
     margin-top: 20px;
+    margin-bottom: 20px;
     position: relative;
     z-index: 1;
 }
@@ -79,6 +66,14 @@ canvas {
     background-color: #b3369a;
 }
 
+.zoom-btn {
+    background-color: #4b0082;
+}
+
+.zoom-btn:hover {
+    background-color: #3a0061;
+}
+
 .notification {
     margin-top: 10px;
     color: #d741b9;
@@ -93,7 +88,7 @@ canvas {
 
 #alert {
     color: #d741b9;
-    margin: 10px;
+    margin: 80px 10px 10px; /* 80px from header */
     font-weight: bold;
     font-size: 20px;
 }

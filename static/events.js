@@ -1,5 +1,6 @@
 console.log("events.js loaded");
 const eventsBody = document.getElementById('eventsBody');
+const downloadCsvBtn = document.getElementById('downloadCsvBtn');
 
 function updateEvents() {
     fetch('/api/events')
@@ -21,5 +22,34 @@ function updateEvents() {
         .catch(err => console.error("Error fetching events:", err));
 }
 
-setInterval(updateEvents, 1000); // Update every 1 second
-updateEvents(); // Initial call
+function downloadCSV() {
+    fetch('/api/events')
+        .then(response => response.json())
+        .then(events => {
+            const headers = ['Victim IP', 'Old MAC', 'New MAC', 'Attacker IP', 'Timestamp'];
+            const csvRows = [headers.join(',')];
+            events.forEach(event => {
+                const row = [
+                    event.ip,
+                    event.old_mac,
+                    event.new_mac,
+                    event.attacker_ip,
+                    event.timestamp
+                ].map(value => `"${value}"`).join(','); // Quote values for CSV safety
+                csvRows.push(row);
+            });
+            const csvContent = csvRows.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `arp_events_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(err => console.error("Error downloading CSV:", err));
+}
+
+downloadCsvBtn.addEventListener('click', downloadCSV);
+setInterval(updateEvents, 1000);
+updateEvents();

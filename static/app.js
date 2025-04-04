@@ -11,6 +11,18 @@ attackedHostImage.src = '/static/images/attacked.svg';
 const attackerHostImage = new Image();
 attackerHostImage.src = '/static/images/attacker-host.svg';
 
+let zoomLevel = 1;
+const minZoom = 0.5;
+const maxZoom = 2;
+const zoomStep = 0.1;
+
+function resizeCanvas() {
+    topologyCanvas.width = topologyCanvas.offsetWidth;
+    topologyCanvas.height = topologyCanvas.offsetHeight;
+}
+window.addEventListener('resize', () => { resizeCanvas(); updateUI(); });
+resizeCanvas();
+
 function showNotification(message) {
     notificationDiv.textContent = message;
     notificationDiv.classList.add('show');
@@ -30,16 +42,31 @@ function stopMonitoring() {
         .then(() => {
             console.log("Monitoring stopped");
             showNotification("🛑 Monitoring Stopped!");
+            resetNetworkState(); // Reset to "Network Safe"
         });
+}
+
+function zoomIn() {
+    if (zoomLevel < maxZoom) {
+        zoomLevel += zoomStep;
+        updateUI();
+    }
+}
+
+function zoomOut() {
+    if (zoomLevel > minZoom) {
+        zoomLevel -= zoomStep;
+        updateUI();
+    }
 }
 
 function drawTopology(devices) {
     topologyCtx.clearRect(0, 0, topologyCanvas.width, topologyCanvas.height);
-    const nodeSize = 40;
+    const nodeSize = 50 * zoomLevel;
     const centerX = topologyCanvas.width / 2;
     const centerY = topologyCanvas.height / 2;
-    const radius = Math.min(topologyCanvas.width, topologyCanvas.height) / 2.5;
-    const angleStep = (2 * Math.PI) / devices.length;
+    const radius = Math.min(topologyCanvas.width, topologyCanvas.height) / 2.5 * zoomLevel; // Reduced from /2 to /2.5
+    const angleStep = devices.length > 1 ? (2 * Math.PI) / devices.length : 0;
 
     devices.forEach((device, index) => {
         const x = centerX + radius * Math.cos(angleStep * index) - nodeSize / 2;
@@ -53,16 +80,31 @@ function drawTopology(devices) {
             topologyCtx.drawImage(normalHostImage, x, y, nodeSize, nodeSize);
         }
 
-        topologyCtx.fillStyle = 'black';
-        topologyCtx.font = '12px Arial';
+        topologyCtx.fillStyle = 'white';
+        topologyCtx.font = `${14 * zoomLevel}px Arial`; // Increased from 12 to 14
         topologyCtx.textAlign = 'center';
         const text = `${device.ip} (${device.mac})`;
-        topologyCtx.fillText(text, x + nodeSize / 2, y + nodeSize + 15);
+        topologyCtx.fillText(text, x + nodeSize / 2, y + nodeSize + 15 * zoomLevel);
     });
 }
 
+function resetNetworkState() {
+    fetch('/api/devices', { cache: 'no-store' })
+        .then(response => response.json())
+        .then(devices => {
+            devices.forEach(device => {
+                device.attacked = false;
+                device.is_attacker = false;
+            });
+            drawTopology(devices);
+            alertDiv.textContent = "Network Safe";
+            alertDiv.classList.remove('alert-active');
+        })
+        .catch(err => console.error("Error resetting network state:", err));
+}
+
 function updateUI() {
-    fetch('/api/devices')
+    fetch('/api/devices', { cache: 'no-store' })
         .then(response => response.json())
         .then(devices => {
             drawTopology(devices);
