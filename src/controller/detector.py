@@ -18,6 +18,7 @@ class ARPSpooferDetector:
     def start_sniffing(self):
         if not self.running:
             self.running = True
+            self.cache.start_monitoring()  # Enable attack detection
             self.thread = threading.Thread(target=self._sniff_thread, args=("eth0",))
             self.thread.start()
 
@@ -28,7 +29,7 @@ class ARPSpooferDetector:
     def stop_sniffing(self):
         if self.running:
             self.running = False
-            self.cache.stop_scan()  # Stop periodic scan
+            self.cache.stop_monitoring()  # Disable attack detection, keep scanning
             if self.thread:
                 self.thread.join(timeout=2)
                 if self.thread.is_alive():

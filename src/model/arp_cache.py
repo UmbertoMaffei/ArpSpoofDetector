@@ -20,8 +20,9 @@ class ARPCache:
         self.last_spoof_time = datetime.now()
         self.build_baseline()
         self.reset_states()
-        self.scan_thread = threading.Thread(target=self._periodic_scan, daemon=True)
         self.scan_running = True
+        self.monitoring_active = False  # Flag for attack detection
+        self.scan_thread = threading.Thread(target=self._periodic_scan, daemon=True)
         self.scan_thread.start()
 
     def build_baseline(self):
@@ -85,6 +86,8 @@ class ARPCache:
         return None
 
     def update(self, ip, mac):
+        if not self.monitoring_active:  # Skip attack detection when not monitoring
+            return None
         now = datetime.now()
         if ip in self.baseline_cache:
             real_mac = self.baseline_cache[ip]
@@ -131,10 +134,20 @@ class ARPCache:
         for dev in self.devices.values():
             dev.attacked = False
             dev.is_attacker = False
-        self.events.clear()  # Clear events too
-        self.spoof_count.clear()  # Reset spoof counts
+        self.events.clear()
+        self.spoof_count.clear()
         print("All device states reset")
 
-    def stop_scan(self):
+    def start_monitoring(self):
+        self.monitoring_active = True
+        print("Monitoring activated")
+
+    def stop_monitoring(self):  # Renamed from stop_scan
+        self.monitoring_active = False
+        self.reset_states()
+        print("Monitoring deactivated, scanning continues")
+
+    def stop_scan(self):  # Kept for completeness, not used now
         self.scan_running = False
-        self.reset_states()  # Reset on stop
+        self.reset_states()
+        print("Scanning stopped")

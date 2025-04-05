@@ -9,7 +9,7 @@
 
 .u-section-1 .u-sheet-1 {
     min-height: 100vh;
-    padding-top: 80px; /* Space for header */
+    padding-top: 80px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -37,10 +37,11 @@ header.u-header {
 
 canvas {
     width: 100%;
-    height: calc(100vh - 260px); /* Adjusted for 80px alert margin + buttons */
-    background: transparent; /* Fully transparent */
+    height: calc(100vh - 260px);
+    background: transparent;
     margin: 20px 0;
     flex-grow: 1;
+    cursor: move; /* Indicate draggability */
 }
 
 .button-container {
@@ -66,14 +67,6 @@ canvas {
     background-color: #b3369a;
 }
 
-.zoom-btn {
-    background-color: #4b0082;
-}
-
-.zoom-btn:hover {
-    background-color: #3a0061;
-}
-
 .notification {
     margin-top: 10px;
     color: #d741b9;
@@ -88,7 +81,7 @@ canvas {
 
 #alert {
     color: #d741b9;
-    margin: 80px 10px 10px; /* 80px from header */
+    margin: 80px 10px 10px;
     font-weight: bold;
     font-size: 20px;
 }
