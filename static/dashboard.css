@@ -41,7 +41,6 @@ canvas {
     background: transparent;
     margin: 20px 0;
     flex-grow: 1;
-    cursor: move; /* Indicate draggability */
 }
 
 .button-container {
