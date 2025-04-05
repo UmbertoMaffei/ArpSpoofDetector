@@ -10,6 +10,8 @@ const attackedHostImage = new Image();
 attackedHostImage.src = '/static/images/attacked-host.svg';
 const attackerHostImage = new Image();
 attackerHostImage.src = '/static/images/attacker-host.svg';
+const gatewayImage = new Image();
+gatewayImage.src = '/static/images/gateway.svg';
 
 function resizeCanvas() {
     topologyCanvas.width = topologyCanvas.offsetWidth;
@@ -41,17 +43,54 @@ function stopMonitoring() {
         });
 }
 
+let flashState = true; // For flashing effect
+setInterval(() => { flashState = !flashState; updateUI(); }, 500); // Toggle every 500ms
+
 function drawTopology(devices) {
     topologyCtx.clearRect(0, 0, topologyCanvas.width, topologyCanvas.height);
-    const nodeSize = 50; // Fixed size, no zoom
+    const nodeSize = 50;
     const centerX = topologyCanvas.width / 2;
     const centerY = topologyCanvas.height / 2;
     const radius = Math.min(topologyCanvas.width, topologyCanvas.height) / 2.5;
-    const angleStep = devices.length > 1 ? (2 * Math.PI) / devices.length : 0;
 
-    devices.forEach((device, index) => {
-        const x = centerX + radius * Math.cos(angleStep * index) - nodeSize / 2;
-        const y = centerY + radius * Math.sin(angleStep * index) - nodeSize / 2;
+    // Find gateway and hosts
+    const gateway = devices.find(d => d.is_gateway) || devices[0];
+    const hosts = devices.filter(d => !d.is_gateway);
+
+    // Draw lines first (behind icons)
+    topologyCtx.globalAlpha = 0.4; // More transparent lines
+    hosts.forEach((device, index) => {
+        const x = centerX + radius * Math.cos((2 * Math.PI / hosts.length) * index) - nodeSize / 2;
+        const y = centerY + radius * Math.sin((2 * Math.PI / hosts.length) * index) - nodeSize / 2;
+
+        topologyCtx.beginPath();
+        topologyCtx.moveTo(centerX, centerY);
+        topologyCtx.lineTo(x + nodeSize / 2, y + nodeSize / 2);
+
+        // Red flashing for attack-related devices
+        if ((device.attacked || device.is_attacker) && flashState) {
+            topologyCtx.strokeStyle = 'red';
+        } else {
+            topologyCtx.strokeStyle = 'white';
+        }
+        topologyCtx.lineWidth = 2;
+        topologyCtx.stroke();
+    });
+    topologyCtx.globalAlpha = 1.0; // Reset alpha for icons
+
+    // Draw gateway in center
+    if (gateway) {
+        topologyCtx.drawImage(gatewayImage, centerX - nodeSize / 2, centerY - nodeSize / 2, nodeSize, nodeSize);
+        topologyCtx.fillStyle = 'white';
+        topologyCtx.font = '14px Arial';
+        topologyCtx.textAlign = 'center';
+        topologyCtx.fillText(`${gateway.ip} (${gateway.mac})`, centerX, centerY + nodeSize + 15);
+    }
+
+    // Draw hosts
+    hosts.forEach((device, index) => {
+        const x = centerX + radius * Math.cos((2 * Math.PI / hosts.length) * index) - nodeSize / 2;
+        const y = centerY + radius * Math.sin((2 * Math.PI / hosts.length) * index) - nodeSize / 2;
 
         if (device.is_attacker) {
             topologyCtx.drawImage(attackerHostImage, x, y, nodeSize, nodeSize);
@@ -62,7 +101,7 @@ function drawTopology(devices) {
         }
 
         topologyCtx.fillStyle = 'white';
-        topologyCtx.font = '14px Arial'; // Fixed font size
+        topologyCtx.font = '14px Arial';
         topologyCtx.textAlign = 'center';
         const text = `${device.ip} (${device.mac})`;
         topologyCtx.fillText(text, x + nodeSize / 2, y + nodeSize + 15);

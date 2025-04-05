@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 import threading
 import time
+import subprocess
 
 scapy.conf.iface = "eth0"
 detector_mac = scapy.get_if_hwaddr("eth0")
@@ -18,12 +19,25 @@ class ARPCache:
         self.devices = {}
         self.spoof_count = defaultdict(int)
         self.last_spoof_time = datetime.now()
+        self.gateway_ip = self.get_gateway_ip()  # Detect gateway
         self.build_baseline()
         self.reset_states()
         self.scan_running = True
-        self.monitoring_active = False  # Flag for attack detection
+        self.monitoring_active = False
         self.scan_thread = threading.Thread(target=self._periodic_scan, daemon=True)
         self.scan_thread.start()
+
+    def get_gateway_ip(self):
+        # Use system command to get default gateway
+        try:
+            result = subprocess.check_output(["ip", "route"]).decode("utf-8")
+            for line in result.splitlines():
+                if "default via" in line:
+                    return line.split()[2]  # e.g., "192.168.154.2"
+        except Exception as e:
+            print(f"Error detecting gateway: {e}")
+            return "192.168.154.2"  # Fallback (adjust if needed)
+        return None
 
     def build_baseline(self):
         arp_request = scapy.ARP(pdst="192.168.154.0/24")
@@ -34,9 +48,13 @@ class ARPCache:
             self.baseline_cache[received.psrc] = received.hwsrc
             self.mac_ip_cache[received.hwsrc] = received.psrc
             self.devices[received.psrc] = NetworkDevice(received.psrc, received.hwsrc)
+            if received.psrc == self.gateway_ip:
+                self.devices[received.psrc].is_gateway = True
         self.baseline_cache[detector_ip] = detector_mac
         self.mac_ip_cache[detector_mac] = detector_ip
         self.devices[detector_ip] = NetworkDevice(detector_ip, detector_mac)
+        if detector_ip == self.gateway_ip:  # Unlikely, but check
+            self.devices[detector_ip].is_gateway = True
         print("Baseline established:", {ip: dev.to_dict() for ip, dev in self.devices.items()})
 
     def _periodic_scan(self):
@@ -56,7 +74,9 @@ class ARPCache:
                     current_devices[ip].mac = mac
                 else:
                     current_devices[ip] = NetworkDevice(ip, mac)
-                    print(f"New device detected: {ip} -> {mac}")
+                    if ip == self.gateway_ip:
+                        current_devices[ip].is_gateway = True
+                print(f"New device detected: {ip} -> {mac}")
             self.devices = {ip: dev for ip, dev in current_devices.items() if ip in live_devices}
             print("Live devices updated:", {ip: dev.to_dict() for ip, dev in self.devices.items()})
             time.sleep(30)
@@ -86,7 +106,7 @@ class ARPCache:
         return None
 
     def update(self, ip, mac):
-        if not self.monitoring_active:  # Skip attack detection when not monitoring
+        if not self.monitoring_active:
             return None
         now = datetime.now()
         if ip in self.baseline_cache:
@@ -119,6 +139,8 @@ class ARPCache:
             self.mac_ip_cache[mac] = ip
             if ip not in self.devices:
                 self.devices[ip] = NetworkDevice(ip, mac)
+                if ip == self.gateway_ip:
+                    self.devices[ip].is_gateway = True
             print(f"New device added: {ip} -> {mac}")
         return None
 
@@ -142,12 +164,12 @@ class ARPCache:
         self.monitoring_active = True
         print("Monitoring activated")
 
-    def stop_monitoring(self):  # Renamed from stop_scan
+    def stop_monitoring(self):
         self.monitoring_active = False
         self.reset_states()
         print("Monitoring deactivated, scanning continues")
 
-    def stop_scan(self):  # Kept for completeness, not used now
+    def stop_scan(self):
         self.scan_running = False
         self.reset_states()
         print("Scanning stopped")
