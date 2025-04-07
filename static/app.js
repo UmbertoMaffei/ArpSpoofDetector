@@ -3,6 +3,7 @@ const topologyCanvas = document.getElementById('topologyCanvas');
 const topologyCtx = topologyCanvas.getContext('2d');
 const alertDiv = document.getElementById('alert');
 const notificationDiv = document.getElementById('notification');
+const monitoringStatusDiv = document.getElementById('monitoringStatus');
 
 const normalHostImage = new Image();
 normalHostImage.src = '/static/images/normal-host.svg';
@@ -12,6 +13,8 @@ const attackerHostImage = new Image();
 attackerHostImage.src = '/static/images/attacker-host.svg';
 const gatewayImage = new Image();
 gatewayImage.src = '/static/images/gateway.svg';
+
+let isMonitoring = false; // Track monitoring state
 
 function resizeCanvas() {
     topologyCanvas.width = topologyCanvas.offsetWidth;
@@ -30,6 +33,9 @@ function startMonitoring() {
     fetch('/api/start', { method: 'POST' })
         .then(() => {
             console.log("Monitoring started");
+            isMonitoring = true;
+            monitoringStatusDiv.textContent = "Monitoring: Active";
+            monitoringStatusDiv.classList.add('active');
             showNotification("🛡️ Monitoring Started!");
         });
 }
@@ -38,13 +44,16 @@ function stopMonitoring() {
     fetch('/api/stop', { method: 'POST' })
         .then(() => {
             console.log("Monitoring stopped");
+            isMonitoring = false;
+            monitoringStatusDiv.textContent = "Monitoring: Stopped";
+            monitoringStatusDiv.classList.remove('active');
             showNotification("🛑 Monitoring Stopped!");
             resetNetworkState();
         });
 }
 
-let flashState = true; // For flashing effect
-setInterval(() => { flashState = !flashState; updateUI(); }, 500); // Toggle every 500ms
+let flashState = true;
+setInterval(() => { flashState = !flashState; updateUI(); }, 500);
 
 function drawTopology(devices) {
     topologyCtx.clearRect(0, 0, topologyCanvas.width, topologyCanvas.height);
@@ -53,12 +62,10 @@ function drawTopology(devices) {
     const centerY = topologyCanvas.height / 2;
     const radius = Math.min(topologyCanvas.width, topologyCanvas.height) / 2.5;
 
-    // Find gateway and hosts
     const gateway = devices.find(d => d.is_gateway) || devices[0];
     const hosts = devices.filter(d => !d.is_gateway);
 
-    // Draw lines first (behind icons)
-    topologyCtx.globalAlpha = 0.4; // More transparent lines
+    topologyCtx.globalAlpha = 0.4;
     hosts.forEach((device, index) => {
         const x = centerX + radius * Math.cos((2 * Math.PI / hosts.length) * index) - nodeSize / 2;
         const y = centerY + radius * Math.sin((2 * Math.PI / hosts.length) * index) - nodeSize / 2;
@@ -66,8 +73,6 @@ function drawTopology(devices) {
         topologyCtx.beginPath();
         topologyCtx.moveTo(centerX, centerY);
         topologyCtx.lineTo(x + nodeSize / 2, y + nodeSize / 2);
-
-        // Red flashing for attack-related devices
         if ((device.attacked || device.is_attacker) && flashState) {
             topologyCtx.strokeStyle = 'red';
         } else {
@@ -76,9 +81,8 @@ function drawTopology(devices) {
         topologyCtx.lineWidth = 2;
         topologyCtx.stroke();
     });
-    topologyCtx.globalAlpha = 1.0; // Reset alpha for icons
+    topologyCtx.globalAlpha = 1.0;
 
-    // Draw gateway in center
     if (gateway) {
         topologyCtx.drawImage(gatewayImage, centerX - nodeSize / 2, centerY - nodeSize / 2, nodeSize, nodeSize);
         topologyCtx.fillStyle = 'white';
@@ -87,7 +91,6 @@ function drawTopology(devices) {
         topologyCtx.fillText(`${gateway.ip} (${gateway.mac})`, centerX, centerY + nodeSize + 15);
     }
 
-    // Draw hosts
     hosts.forEach((device, index) => {
         const x = centerX + radius * Math.cos((2 * Math.PI / hosts.length) * index) - nodeSize / 2;
         const y = centerY + radius * Math.sin((2 * Math.PI / hosts.length) * index) - nodeSize / 2;

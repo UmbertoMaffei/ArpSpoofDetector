@@ -90,6 +90,17 @@ canvas {
     animation: blink 1s infinite;
 }
 
+.monitoring-status {
+    margin-top: 10px;
+    color: #d741b9;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.monitoring-status.active {
+    color: #00ff00; /* Green when monitoring */
+}
+
 @keyframes blink {
     50% { opacity: 0; }
 }
