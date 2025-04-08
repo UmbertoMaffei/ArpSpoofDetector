@@ -4,7 +4,7 @@ class NetworkDevice:
         self.mac = mac
         self.attacked = False
         self.is_attacker = False
-        self.is_gateway = False  # New attribute
+        self.is_gateway = False
 
     def to_dict(self):
         return {
