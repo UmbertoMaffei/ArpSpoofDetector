@@ -1,10 +1,15 @@
+# Import necessary modules from Flask for creating a web server and handling JSON responses
 from flask import Flask, jsonify, send_from_directory
 from .controller.detector import ARPSpooferDetector
 import os
 
+# Initialize the Flask application
 app = Flask(__name__, static_folder="../static")
+# Create an instance of ARPSpooferDetector to handle ARP spoofing detection logic
 detector = ARPSpooferDetector()
 
+
+# Define a route for the different roots URL to serve the main frontend page and functions
 @app.route('/')
 def serve_frontend():
     return send_from_directory(app.static_folder, 'index.html')
@@ -37,7 +42,10 @@ def stop_monitoring():
     detector.stop_sniffing()
     return jsonify({'status': 'stopped'})
 
+
 if __name__ == "__main__":
+    # Ensure the static folder exists and create it if it does not exists
     if not os.path.exists('../static'):
         os.makedirs('../static')
+    # Run the Flask application on all network interfaces and on port 5000
     app.run(host='0.0.0.0', port=5000, debug=True)

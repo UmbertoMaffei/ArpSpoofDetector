@@ -1,10 +1,13 @@
 console.log("app.js loaded");
+
+// Get references to HTML elements by their IDs for manipulation
 const topologyCanvas = document.getElementById('topologyCanvas');
 const topologyCtx = topologyCanvas.getContext('2d');
 const alertDiv = document.getElementById('alert');
 const notificationDiv = document.getElementById('notification');
 const monitoringStatusDiv = document.getElementById('monitoringStatus');
 
+// Load images for visualizing different types of network devices
 const normalHostImage = new Image();
 normalHostImage.src = '/static/images/normal-host.svg';
 const attackedHostImage = new Image();
@@ -14,6 +17,7 @@ attackerHostImage.src = '/static/images/attacker-host.svg';
 const gatewayImage = new Image();
 gatewayImage.src = '/static/images/gateway.svg';
 
+// Variable to track whether monitoring is active
 let isMonitoring = false; // Track monitoring state
 
 function resizeCanvas() {
@@ -29,6 +33,7 @@ function showNotification(message) {
     setTimeout(() => notificationDiv.classList.remove('show'), 2000);
 }
 
+// Function to start network monitoring by calling the backend API
 function startMonitoring() {
     fetch('/api/start', { method: 'POST' })
         .then(() => {
@@ -40,6 +45,7 @@ function startMonitoring() {
         });
 }
 
+// Function to stop network monitoring by calling the backend API
 function stopMonitoring() {
     fetch('/api/stop', { method: 'POST' })
         .then(() => {
@@ -52,9 +58,11 @@ function stopMonitoring() {
         });
 }
 
+// Variable and interval to toggle a flashing effect for attacked/attacker devices
 let flashState = true;
 setInterval(() => { flashState = !flashState; updateUI(); }, 500);
 
+// Function to draw the network topology on the canvas
 function drawTopology(devices) {
     topologyCtx.clearRect(0, 0, topologyCanvas.width, topologyCanvas.height);
     const nodeSize = 50;
@@ -111,6 +119,7 @@ function drawTopology(devices) {
     });
 }
 
+// Function to reset the network state and update the UI (Network Safe)
 function resetNetworkState() {
     fetch('/api/devices', { cache: 'no-store' })
         .then(response => response.json())
@@ -127,6 +136,7 @@ function resetNetworkState() {
         .catch(err => console.error("Error resetting network state:", err));
 }
 
+// Function to periodically update the UI with the latest device data
 function updateUI() {
     fetch('/api/devices', { cache: 'no-store' })
         .then(response => response.json())
@@ -140,5 +150,8 @@ function updateUI() {
         .catch(err => console.error("Error fetching devices:", err));
 }
 
+// Set an interval to update the UI every 1 second
 setInterval(updateUI, 1000);
+
+// Call updateUI immediately to initialize the display
 updateUI();

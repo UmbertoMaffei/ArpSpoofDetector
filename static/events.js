@@ -1,7 +1,10 @@
 console.log("events.js loaded");
+
+// Get references to HTML elements by their IDs for manipulation
 const eventsBody = document.getElementById('eventsBody');
 const downloadCsvBtn = document.getElementById('downloadCsvBtn');
 
+// Function to fetch and display ARP events from the backend
 function updateEvents() {
     fetch('/api/events')
         .then(response => response.json())
@@ -22,6 +25,7 @@ function updateEvents() {
         .catch(err => console.error("Error fetching events:", err));
 }
 
+// Function to fetch events and download them as a CSV file
 function downloadCSV() {
     fetch('/api/events')
         .then(response => response.json())
@@ -51,5 +55,7 @@ function downloadCSV() {
 }
 
 downloadCsvBtn.addEventListener('click', downloadCSV);
+
+// Set an interval to update the events table every 1 second
 setInterval(updateEvents, 1000);
 updateEvents();
