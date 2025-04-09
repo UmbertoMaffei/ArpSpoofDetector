@@ -42,6 +42,10 @@ def stop_monitoring():
     detector.stop_sniffing()
     return jsonify({'status': 'stopped'})
 
+@app.route('/api/status')  # New endpoint
+def get_monitoring_status():
+    return jsonify({'monitoring': detector.running})
+
 
 if __name__ == "__main__":
     # Ensure the static folder exists and create it if it does not exists

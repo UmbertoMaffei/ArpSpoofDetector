@@ -150,6 +150,20 @@ function updateUI() {
         .catch(err => console.error("Error fetching devices:", err));
 }
 
+// Sync monitoring status on page load
+function syncMonitoringStatus() {
+    fetch('/api/status')
+        .then(response => response.json())
+        .then(data => {
+            isMonitoring = data.monitoring;
+            monitoringStatusDiv.textContent = isMonitoring ? "Monitoring: Active" : "Monitoring: Stopped";
+            monitoringStatusDiv.classList.toggle('active', isMonitoring);
+            console.log("Monitoring status synced:", isMonitoring);
+        })
+        .catch(err => console.error("Error syncing monitoring status:", err));
+}
+
+syncMonitoringStatus();
 // Set an interval to update the UI every 1 second
 setInterval(updateUI, 1000);
 
