@@ -1,0 +1,54 @@
+.u-section-1 {
+    background-image: linear-gradient(0deg, rgba(26,26,26,0.55), rgba(26,26,26,0.55)), url("/static/images/Homepage-HD-slide-banner-11-1.jpg");
+    background-position: 50% 50%;
+    background-size: cover;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.u-section-1 .u-sheet-1 {
+    min-height: 100vh;
+    padding-top: 100px;
+}
+
+@media (max-width: 1199px) { .u-section-1 .u-sheet-1 { min-height: 80vh; } }
+@media (max-width: 991px) { .u-section-1 .u-sheet-1 { min-height: 60vh; } }
+@media (max-width: 767px) { .u-section-1 .u-sheet-1 { min-height: 40vh; } }
+@media (max-width: 575px) { .u-section-1 .u-sheet-1 { min-height: 20vh; } }
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    height: 100vh;
+}
+
+header.u-header {
+    background: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+h2 {
+    color: #d741b9;
+    margin: 20px 0;
+    font-size: 26px;
+}
+
+.about-content {
+    background: rgba(106, 27, 79, 0.44);
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    margin: 0 auto;
+    text-align: left;
+    color: #fff5f5bf;
+}
+
+.about-content ul {
+    list-style-type: disc;
+    padding-left: 40px;
+}

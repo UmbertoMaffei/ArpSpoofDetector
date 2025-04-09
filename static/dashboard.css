@@ -1,0 +1,106 @@
+.u-section-1 {
+    background-image: linear-gradient(0deg, rgba(26,26,26,0.55), rgba(26,26,26,0.55)), url("/static/images/Homepage-HD-slide-banner-11-1.jpg");
+    background-position: 50% 50%;
+    background-size: cover;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.u-section-1 .u-sheet-1 {
+    min-height: 100vh;
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+@media (max-width: 1199px) { .u-section-1 .u-sheet-1 { min-height: 80vh; } }
+@media (max-width: 991px) { .u-section-1 .u-sheet-1 { min-height: 60vh; } }
+@media (max-width: 767px) { .u-section-1 .u-sheet-1 { min-height: 40vh; } }
+@media (max-width: 575px) { .u-section-1 .u-sheet-1 { min-height: 20vh; } }
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    height: 100vh;
+}
+
+header.u-header {
+    background: rgba(0, 0, 0, 0.7) !important;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+canvas {
+    width: 100%;
+    height: calc(100vh - 260px);
+    background: transparent;
+    margin: 20px 0;
+    flex-grow: 1;
+}
+
+.button-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.monitor-btn {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #d741b9;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.monitor-btn:hover {
+    background-color: #b3369a;
+}
+
+.notification {
+    margin-top: 10px;
+    color: #d741b9;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.notification.show {
+    opacity: 1;
+}
+
+#alert {
+    color: #d741b9;
+    margin: 80px 10px 10px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#alert.alert-active {
+    color: red;
+    animation: blink 1s infinite;
+}
+
+.monitoring-status {
+    margin-top: 10px;
+    color: #d741b9;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.monitoring-status.active {
+    color: #00ff00; /* Green when monitoring */
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}

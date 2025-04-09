@@ -7,23 +7,23 @@
     <meta name="description" content="">
     <title>ARP GUARDIAN</title>
     <link rel="stylesheet" href="/static/nicepage.css" media="screen">
-    <link rel="stylesheet" href="/static/dashboard.css" media="screen">
+    <link rel="stylesheet" href="/static/arp-events.css" media="screen">
     <script class="u-script" type="text/javascript" src="/static/jquery.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="/static/nicepage.js" defer=""></script>
-    <script type="text/javascript" src="/static/app.js" defer=""></script>
+    <script type="text/javascript" src="/static/events.js" defer=""></script>
     <link rel="icon" href="/static/images/seclogo.svg">
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
     <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i|Roboto+Condensed:300,300i,400,400i,700,700i">
     <script type="application/ld+json">{
         "@context": "http://schema.org",
         "@type": "Organization",
-        "name": "Site2",
+        "name": "ARP GUARDIAN SITE",
         "logo": "/static/images/seclogo.svg"
     }</script>
     <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="dashboard">
+    <meta property="og:title" content="ARP GUARDIAN">
     <meta property="og:description" content="">
-    <meta property="og:type" content="ARP GUARDIAN">
+    <meta property="og:type" content="website">
 </head>
 <body data-path-to-root="./" class="u-body u-overlap u-overlap-contrast u-overlap-transparent u-xl-mode" data-lang="it">
     <header class="u-clearfix u-header u-header" id="sec-e1b3">
@@ -49,7 +49,7 @@
                             <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
                                 <li class="u-nav-item"><a class="u-button-style u-nav-link" href="/">Dashboard</a></li>
                                 <li class="u-nav-item"><a class="u-button-style u-nav-link" href="/arp-events">ARP Events</a></li>
-                                <li class="u-nav-item"><a class="u-button-style u-nav-link">other</a></li>
+                                <li class="u-nav-item"><a class="u-button-style u-nav-link" href="/about">About</a></li>
                             </ul>
                         </div>
                     </div>
@@ -62,16 +62,24 @@
             <h6 class="u-align-left u-custom-font u-font-roboto-condensed u-text u-text-custom-color-2 u-text-1">ARP GUARDIAN</h6>
         </div>
     </header>
-    <section class="u-clearfix u-container-align-center u-image u-shading u-section-1" id="sec-4eed" data-image-width="1920" data-image-height="1080">
+    <section class="u-clearfix u-container-align-center u-image u-shading u-section-1" id="sec-4eed" data-image-width="1920" data-image-height="1080" style="padding-top: 90px;">
         <div class="u-clearfix u-sheet u-sheet-1">
-            <div id="alert" style="font-size: 20px;"></div>
-            <canvas id="topologyCanvas"></canvas>
-            <div class="button-container">
-                <button class="monitor-btn" onclick="startMonitoring()">Start Monitoring</button>
-                <button class="monitor-btn" onclick="stopMonitoring()">Stop Monitoring</button>
-                <div id="monitoringStatus" class="monitoring-status">Monitoring: Stopped</div>
-                <div id="notification" class="notification"></div>
+            <h2 style="font-size: 26px;">ARP Events</h2>
+            <div class="table-container">
+                <table id="eventsTable">
+                    <thead>
+                        <tr>
+                            <th>Victim IP</th>
+                            <th>Old MAC</th>
+                            <th>New MAC</th>
+                            <th>Attacker IP</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody id="eventsBody"></tbody>
+                </table>
             </div>
+            <button id="downloadCsvBtn" class="monitor-btn">Download as CSV</button>
         </div>
     </section>
 </body>
