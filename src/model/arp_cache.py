@@ -212,7 +212,7 @@ class ARPCache:
 
     # Method to return the list of current devices
     def get_devices(self):
-        # Method to return the list of ARP events
+        # Method to return the list of devices converting devices dict to a list of NetworkDevice objects
         devices_list = list(self.devices.values())
         print("Returning devices from get_devices:", [d.to_dict() for d in devices_list])
         return devices_list
@@ -221,7 +221,7 @@ class ARPCache:
     def get_events(self):
         return self.events
 
-    # Convert devices dict to a list of NetworkDevice objects
+    # Method to reset the NetworkDevice objects
     def reset_states(self):
         # Method to reset attack-related states
         for dev in self.devices.values():
